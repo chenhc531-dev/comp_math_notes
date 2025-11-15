@@ -1,1 +1,16 @@
-
+matrix:
+- name: LaTeX Files
+  sources:
+  - "**/*.tex"
+  - "!node_modules/**"
+  - "!build/**"
+  - "!output/**"
+  default_encoding: utf-8
+  aspell:
+    lang: en
+    mode: tex
+  dictionary:
+    wordlists:
+    - .dictionary.txt
+  pipeline:
+  - pyspelling.filters.latex:
