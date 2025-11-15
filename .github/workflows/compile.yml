@@ -24,7 +24,7 @@ jobs:
             texlive-science \
             texlive-extra-utils
           
-      - name: Find and compile .tex files
+      - name: Compile .tex files to build directory
         run: |
           # 创建构建目录
           mkdir -p build
@@ -35,38 +35,40 @@ jobs:
             echo "Found: $texfile"
           done
           
-          # 尝试直接编译根目录下的 .tex 文件
+          # 编译所有 .tex 文件到 build 目录
           for texfile in *.tex; do
             if [ -f "$texfile" ]; then
               echo "=== Compiling: $texfile ==="
               filename=$(basename "$texfile" .tex)
               
-              # 编译到当前目录
-              latexmk -pdf -interaction=nonstopmode "$texfile" || echo "Compilation may have issues for $texfile"
+              # 关键修改：直接编译到 build 目录，不在根目录生成PDF
+              latexmk -pdf -interaction=nonstopmode -outdir=build "$texfile" || echo "Compilation may have issues for $texfile"
               
-              # 如果生成了 PDF，复制到 build 目录
-              if [ -f "${filename}.pdf" ]; then
-                cp "${filename}.pdf" "build/${filename}.pdf"
-                echo "✓ Successfully compiled: ${filename}.pdf"
+              # 检查是否在build目录中成功生成PDF
+              if [ -f "build/${filename}.pdf" ]; then
+                echo "✓ Successfully compiled: build/${filename}.pdf"
               else
                 echo "✗ Failed to generate PDF for: $texfile"
               fi
             fi
           done
           
+      - name: Clean up root directory PDFs
+        run: |
+          # 清理可能意外在根目录生成的PDF文件
+          rm -f *.pdf 2>/dev/null || true
+          echo "Cleaned up any PDFs in root directory"
+          
       - name: Check build directory contents
         run: |
           echo "Contents of build directory:"
           ls -la build/ || echo "Build directory is empty"
-          echo "Contents of root directory:"
-          ls -la *.pdf 2>/dev/null || echo "No PDFs in root directory"
+          echo "Number of PDFs generated: $(find build -name "*.pdf" | wc -l)"
           
       - name: Upload PDF artifacts
         uses: actions/upload-artifact@v4
         with:
           name: compiled-pdfs
-          path: |
-            build/*.pdf
-            *.pdf
-          if-no-files-found: warn
+          path: build/*.pdf
+          if-no-files-found: error
           retention-days: 30
