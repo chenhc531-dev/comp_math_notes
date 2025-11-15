@@ -21,4 +21,5 @@ jobs:
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
-          rootfile: main.pdf
+          name: computational-mathematics-notes
+          path: main.pdf
