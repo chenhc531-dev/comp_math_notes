@@ -16,10 +16,10 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v3                                  
         with:
-          root_file: 1.tex
+          root_file: 2.tex
           
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
           name: computational-mathematics-notes
-          path: 1.pdf
+          path: 2.pdf
