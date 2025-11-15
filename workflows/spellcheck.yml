@@ -2,9 +2,9 @@ name: Spell Check
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
 
 jobs:
   spellcheck:
@@ -17,6 +17,4 @@ jobs:
         uses: igsekor/pyspelling-any@v0.0.2
   
         with:
-          source_files: "**/*.tex"
-          task_name: LaTeX  
-          config_path: .github/spellcheck-config.yml  
+          configFile:'.my-custom-config.yml'  
