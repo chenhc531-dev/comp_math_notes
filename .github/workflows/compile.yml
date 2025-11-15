@@ -13,35 +13,60 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         
-      - name: Setup LaTeX
+      - name: Setup LaTeX environment
         run: |
-          # 安装 LaTeX 和必要的包
           sudo apt-get update
-          sudo apt-get install -y texlive-latex-base texlive-latex-extra latexmk
+          sudo apt-get install -y \
+            texlive-latex-base \
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            latexmk \
+            texlive-science \
+            texlive-extra-utils
           
-      - name: Compile all main .tex files
+      - name: Find and compile .tex files
         run: |
           # 创建构建目录
           mkdir -p build
           
-          # 查找并编译所有 .tex 文件
+          # 查找所有 .tex 文件
+          echo "Looking for .tex files..."
           find . -name "*.tex" -type f | while read texfile; do
-            echo "=== Compiling: $texfile ==="
-            filename=$(basename "$texfile" .tex)
-            dirpath=$(dirname "$texfile")
-            
-            # 进入文件所在目录编译
-            cd "$dirpath"
-            latexmk -pdf -interaction=nonstopmode -output-directory=../build "$filename.tex" || echo "Note: Compilation may have issues for $texfile"
-            cd - > /dev/null
+            echo "Found: $texfile"
           done
+          
+          # 尝试直接编译根目录下的 .tex 文件
+          for texfile in *.tex; do
+            if [ -f "$texfile" ]; then
+              echo "=== Compiling: $texfile ==="
+              filename=$(basename "$texfile" .tex)
+              
+              # 编译到当前目录
+              latexmk -pdf -interaction=nonstopmode "$texfile" || echo "Compilation may have issues for $texfile"
+              
+              # 如果生成了 PDF，复制到 build 目录
+              if [ -f "${filename}.pdf" ]; then
+                cp "${filename}.pdf" "build/${filename}.pdf"
+                echo "✓ Successfully compiled: ${filename}.pdf"
+              else
+                echo "✗ Failed to generate PDF for: $texfile"
+              fi
+            fi
+          done
+          
+      - name: Check build directory contents
+        run: |
+          echo "Contents of build directory:"
+          ls -la build/ || echo "Build directory is empty"
+          echo "Contents of root directory:"
+          ls -la *.pdf 2>/dev/null || echo "No PDFs in root directory"
           
       - name: Upload PDF artifacts
         uses: actions/upload-artifact@v4
         with:
           name: compiled-pdfs
-          path: build/
+          path: |
+            build/*.pdf
+            *.pdf
+          if-no-files-found: warn
           retention-days: 30
-          
-      - name: List compiled PDFs
-        run: ls -la build/ || echo "No PDFs were generated"
