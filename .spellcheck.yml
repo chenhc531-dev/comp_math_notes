@@ -1,0 +1,34 @@
+matrix:
+- name: Markdown
+  aspell:
+    lang: en
+  dictionary:
+    wordlists:
+    - .wordlist.txt
+    output: build/dictionary.txt
+  pipeline:
+  - pyspelling.filters.markdown:
+  - pyspelling.filters.html:
+  sources:
+  - '**/*.md'
+  default_encoding: utf-8
+
+- name: LaTeX
+  aspell:
+    lang: en
+  dictionary:
+    wordlists:
+    - .wordlist.txt
+    output: build/dictionary.txt
+  pipeline:
+  - pyspelling.filters.context:
+    context_visible: false
+    delimiters:
+    # Ignore LaTeX commands
+    - open: '(?s)\\\\[a-zA-Z]+\{'
+      close: '\}'
+    - open: '\\\\[a-zA-Z]+'
+      close: ''
+  sources:
+  - '**/*.tex'
+  default_encoding: utf-8
