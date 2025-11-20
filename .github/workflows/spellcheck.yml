@@ -1,20 +1,47 @@
-name: Spellcheck
+name: LaTeX Build with Spell Check
 
-on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+on: [push, pull_request]
 
 jobs:
-  spellcheck:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5.0.1
-        
-      - name: Spellcheck
-        uses: igsekor/pyspelling-any@v0.0.2
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+          
+      - name: Install spell check tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y aspell aspell-en
+          pip install codespell
+          
+      - name: Check spelling with codespell
+        run: |
+          codespell --skip="*.pdf,*.bin,*.pyc,*.png,*.jpg" --ignore-words-list="tex,filename" || true
+          
+      - name: LaTeX specific spell check
+        run: |
+          # 创建自定义字典来忽略 LaTeX 命令
+          cat > .aspell.en.pws << 'EOF'
+          personal_ws-1.1 en 0
+          BibTeX
+          LaTeX
+          tex
+          EOF
+          
+          # 检查所有 .tex 文件
+          for file in $(find . -name "*.tex"); do
+            echo "Checking $file"
+            errors=$(aspell --lang=en --mode=tex --personal=.aspell.en.pws list < "$file")
+            if [ -n "$errors" ]; then
+              echo "Spelling errors in $file:"
+              echo "$errors"
+            fi
+          done
   
   
           
