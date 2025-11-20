@@ -1,22 +1,70 @@
+# typos.toml
 [files]
-extend-exclude = ["*.pdf", "*.aux", "*.log"]  # 排除编译生成的文件
-
-[default]
-# 忽略 LaTeX 特定的命令和编码
-ignore-regex = ['\\w+\\d+']  # 忽略类似 OT1 的字母数字组合
+extend-exclude = [
+    "*.pdf", "*.aux", "*.log", "*.out", "*.toc",  # 排除编译文件
+    "*.bbl", "*.blg", "*.fdb_latexmk", "*.fls", "*.synctex.gz"
+]
 
 [default.ignore-words]
-# 明确忽略这些技术术语
+# LaTeX 字体和编码
 "OT1" = "OT1"
+"T1" = "T1"
 "pzc" = "pzc"
 "mathpzc" = "mathpzc"
 
+# 数学术语和命令
+"mathbb" = "mathbb"
+"mathcal" = "mathcal"
+"mathbf" = "mathbf"
+"mathit" = "mathit"
+"mathrm" = "mathrm"
+
+# 常见的数学缩写
+"iff" = "iff"
+"st" = "st"  # such that
+"wrt" = "wrt"  # with respect to
+
 [default.extend-words]
-# 添加计算数学常用术语
-"eigenvalue" = "eigenvalue"
-"eigenvector" = "eigenvector"
+# 计算数学专业术语
 "numerical" = "numerical"
 "computational" = "computational"
 "algorithm" = "algorithm"
-"LaTeX" = "LaTeX"
-"BibTeX" = "BibTeX"
+"eigenvalue" = "eigenvalue"
+"eigenvector" = "eigenvector"
+"eigenspace" = "eigenspace"
+"eigendecomposition" = "eigendecomposition"
+"linear" = "linear"
+"nonlinear" = "nonlinear"
+"convergence" = "convergence"
+"discretization" = "discretization"
+"interpolation" = "interpolation"
+"extrapolation" = "extrapolation"
+"approximation" = "approximation"
+"optimization" = "optimization"
+"minimization" = "minimization"
+"maximization" = "maximization"
+"derivative" = "derivative"
+"integral" = "integral"
+"differential" = "differential"
+"polynomial" = "polynomial"
+"coefficient" = "coefficient"
+"matrix" = "matrix"
+"vector" = "vector"
+"tensor" = "tensor"
+"norm" = "norm"
+"orthogonal" = "orthogonal"
+"symmetric" = "symmetric"
+"hermitian" = "hermitian"
+"unitary" = "unitary"
+"determinant" = "determinant"
+"inverse" = "inverse"
+"pseudoinverse" = "pseudoinverse"
+"decomposition" = "decomposition"
+"factorization" = "factorization"
+"iteration" = "iteration"
+"recursive" = "recursive"
+"stability" = "stability"
+"accuracy" = "accuracy"
+"precision" = "precision"
+"roundoff" = "roundoff"
+"truncation" = "truncation"
