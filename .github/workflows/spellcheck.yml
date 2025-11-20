@@ -16,4 +16,4 @@ jobs:
       - name: Spell Check
         uses: crate-ci/typos@v1.20.10
         with:
-          files: .
+          config: ./typos.toml  # 指定配置文件
