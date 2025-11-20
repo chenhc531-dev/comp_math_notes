@@ -1,28 +1,6 @@
-%\documentclass[12pt,a4paper]{article}  % Use this line if this document will be released
-\documentclass[12pt,a4paper,draft]{article}  % Use this line if this document is a draft
+\documentclass[12pt,a4paper]{article}  % Use this line if this document will be released
+
 \usepackage{ifdraft}
-
-
-%% Bibliography
-\usepackage{etoolbox}
-\newcommand{\bibfile}{\jobname.bib}  % Name of the BibTeX file.
-% ref.bib should be a symbolic link to the universal BibTeX file, which should be a local copy of
-% https://github.com/equipez/bibliographie/blob/main/ref.bib
-% Run `getbib` in the current directory under the draft mode to get the BibTeX file containing only
-% the cited references. The name will be xyz.bib if this TeX file is xyz.tex.
-\newcommand{\universalbib}{ref.bib}
-\ifdraft{\IfFileExists{\universalbib}{\renewcommand{\bibfile}{\universalbib}}{}}{}
-% The counter `cite' is used to count the number of citations.
-\newcounter{cite}
-\pretocmd{\cite}{\stepcounter{cite}}{}{}
-
-
-%% Add line numbers in draft mode
-\RequirePackage[mathlines]{lineno}
-\ifdraft{\linenumbers}{}
-\renewcommand{\linenumberfont}{\normalfont\scriptsize\sffamily\color{gray}}
-\setlength{\linenumbersep}{\marginparsep}
-
 
 %% Geometry
 %\voffset=-1.5cm \hoffset=-1.4cm \textwidth=16cm \textheight=22.0cm  % Luis' setting
@@ -69,14 +47,6 @@
 \definecolor{darkyellow}{rgb}{0.65,0.65,0.01}
 
 
-%% Todo notes
-\ifdraft{
-    \setlength{\marginparwidth}{2.42cm}
-    \usepackage[tickmarkheight=3pt,textsize=small,backgroundcolor=blue!16,linecolor=purple,bordercolor=purple]{todonotes}
-}{
-    \newcommand{\todo}[1]{}
-    \newcommand{\listoftodos}{}
-}
 
 
 %% Graph, tikz and pgf
@@ -94,29 +64,6 @@
 \pgfplotsset{compat=1.11}
 
 
-%% Turn off some unharmful warnings in draft mode
-%% N.B.: DO NOT use `silence` together with `hyperref`. They will cause an infinite loop.
-\ifdraft{
-    \usepackage{silence}
-    \WarningFilter{xcolor}{Incompatible color definition on}
-    \WarningFilter{hyperref}{Draft mode on}
-    \WarningFilter{refcheck}{Unused label}
-    \WarningFilter{microtype}{`draft' option active}
-    \WarningFilter{latex}{Writing or overwriting file} % Mute the warning about 'writing/overwriting file'
-    \WarningFilter{latex}{Writing file} % Mute the warning about 'writing/overwriting file'
-    \WarningFilter{latex}{Tab has} % Mute the warning about 'Tab has been converted to Blank Space'
-    \WarningFilter{latex}{Marginpar on page} % Mute the warning about 'Marginpar on page xx moved'
-    \WarningFilter{latex}{author given} % Mute the warning about 'No \author given'
-}{}
-
-
-%% Hyperref, url, and email
-%% N.B.: DO NOT use `silence` together with `hyperref`. They will cause an infinite loop.
-\ifdraft{\usepackage{refcheck}\newcommand{\url}{\texttt}}{
-    \usepackage{hyperref}
-    \hypersetup{colorlinks, linkcolor=darkblue, anchorcolor=darkblue, citecolor=darkblue, urlcolor=darkblue}
-    \usepackage{url}
-} % Check unused labels
 \newcommand{\email}{\texttt}
 
 
@@ -355,12 +302,11 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\title{ }
+\title{A Guide to Mathematical Writing}
 
 \date{\DTMnow}
 
-\author{
-    \thanks{}
+\author{Chen Huicong 
     %\and
     %Author2
     %\thanks{Information2}
@@ -371,22 +317,203 @@
 
 \maketitle
 
-%\begin{abstract}
-%\end{abstract}
+\section{Introduction}
+In this paper, we present notes on mathematical writing. The following material is organized as follows: First, we provide advice on form, such as the correct use of colons and commas. Then, we offer suggestions regarding content, including comments on English prose and mathematical exposition. After that, we discuss quotations, and finally, we guide you through the writing process. Of course, there is an exercise with its accompanying answer.
 
-%\textbf{Keywords}: Keyword1, Keyword2
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Form}
+In this section, we deal with questions of form. \\
+1. Don't start a sentence with a symbol. \\
+\indent Bad: \(x^n-a\) has $n$ zeros in the complex field. 
+\\
+\indent Good: The polynomial \(x^n-a\) has $n$ zeros in the complex field. \\
+But when you are editing the answers to the exercises in a book, you can neglect this rule, because answers need to be quick and pithy. \\
+
+\noindent 2. Don't use symbols like $\forall$, $\because$, $\therefore$, $\exists$; replace them with the corresponding words (for all, because, therefore, exists).\\
+\indent Bad: \(\forall\) $x$, $y$=e$^x$>0. \\
+\indent Good: For all $x$, \(y=e^x>0
+\). \\
+
+\noindent3. When you use an ellipsis, such as (a\(_1\),\dots, a\(_n\)), remember to put commas before and
+after the three dots. When placing ellipses between commas, the three dots belong on the same level as the commas; when the ellipsis is bracketed by symbols such as `+' or `<', the dots should be at mid-level.\\
+\indent Good: Suppose A=(a\(_1\), \dots , a\(_n\)).\\
+\indent Good: 1+2+3+···+n=\(\frac{n(n+1)}{2}\).\\
+
+\noindent4. Correct use of colons: Firstly, be careful not to overuse colons.\\
+\indent Bad: We have<formula>: \dots\\
+\indent Better: Define it as follows: \dots\\
+Then, should the first word after a colon be capitalized?\\
+Yes, if the phrase following the colon is a full sentence. No, if it is a sentence fragment.\\
+\indent Good: Define it as follows: A rational number is a number like\(\frac{a}{b}\). \\
+\\
+
+\noindent5. Reduce the use of parentheses:\\     
+\indent5.1: Avoid placing too many ideas in parentheses (like this) (as it is tiring).\\
+\indent 5.2: Do not use nested parentheses. \\    
+\noindent Bad: (Definition(2)) \\
+\noindent Good: (Definition 2)\\
+
+\noindent 6. Don't replace parentheses with brackets or curly braces when you have to use nested parentheses. Because nowadays, brackets and curly braces have semantic content for many scientific professionals. So please reduce nested parentheses.
+\indent Bad: [(x+y)*a]/c
+
+\section{English prose}	
+1. Capitalize names like Theorem 1, Lemma 2, Algorithm 3, Method 4.\\
+
+\noindent2. Ensure that your article is free from misspellings. We can utilize spelling checkers as needed, and you may also use \textit{Webster’s New World Speller Divider} to assist you with spelling.\\
+
+\noindent3. The opening paragraph of your paper should be strong, starting with your best sentence. A poor beginning can make readers doubt the rest of the content, while an engaging start can help them overlook minor errors later on. When writing an effective first paragraph, starting with a sentence structured as ``An x is y'' is one of the least effective ways to begin. \\
+\indent Bad: A famous equation is \(e^{i\pi}+1=0\).\\
+\indent Good: The equation \(e^{i\pi}+1=0\) is very famous. To prove it, we need\dots\\ 
+
+\noindent4. Use we instead of I, unless the author's persona is relevant. The word `we' can bridge the gap between the reader and the author, as it means ``you and me together''. Books or papers always have multiple authors; they can either ``revel in the ambiguity'' of continuing to use `we'. If one of the authors needs to be mentioned separately, the text can say `one of the authors', or `the first author', but not 'the senior author'. \\
+
+\noindent5. Resist the temptation to use long strings of nouns as adjectives:  consider the packet-switched data communication network protocol problem.\\
+
+\noindent6. Small numbers(like 1, 2, 3\dots) should be spelled out when used like adjectives, like: \\
+\indent Good: two books, the formulas\dots\\
+While small numbers should not be spelled when used as a name, like: \\
+\indent Good: Method 2, chapter 2, Lemma 1\dots\\
+
+\noindent7. Don't omit the word ``that'' when it helps the reader to parse the sentence. The words ``assume'' and ``suppose'' should usually be followed by ``that'' unless another ``that'' appears nearby. But we never say ``We have that\dots''. Just say ``We have\dots''. Don't use ``the fact that'', unless you think the reader is tired of analyzing technical points.\\
+\indent Bad: Consider z=a+bi.\\
+\indent Good: Consider that z=a+bi.\\
+
+\noindent8. Select ``that'' and ``which'' carefully. ``If you can substitute `that' for which, do it.'' This may be the simplest rule to choose the two words in an attributive clause. Some famous authors insist on not substituting every ``which'' for ``that'', because they think a whole page of ``that'' may disturb the readers. So the best way to choose one is to judge the tone in the sentence and decide on the better one. \\
+\indent Bad: Don't use commas which are not necessary. \\
+\indent Good: Don't use commas that are not necessary. \\
+
+\noindent9. Make your article more dynamic by varying your word choice and sentence structure; that is, avoid monotony. But don't use unusual or polysyllabic utterances. These words, as well as ``like'' and ``also'' in consecutive sentences, will linger in the reader's mind, so that they may forget other really important points in your article, while a well-styled article can keep these words spaced well apart. For example, the word ``utterances'' is not quite suitable. \\
+
+\noindent10. About the tense: Use the present tense for timeless facts, but it's OK to use the past tense for ``facts'' that have turned out to be errors (for example, all Fermat numbers were prime numbers). Mixed tense on the same subject is terrible.\\
+\indent Bad: We suppose that\dots, but we will hope to prove\dots\\
+\indent Good: We suppose that\dots, but we are hoping to prove\dots\\
+
+\noindent11. Too many commas can interrupt the flow of a sentence. For example, when we begin a sentence with ``Therefore,\dots'', the comma here should be omitted. Too few commas can make a sentence difficult to read. As an example, the sentence ``Suppose A is a B because \dots'' at least needs a comma before ``because''.
+
+
+\section{Mathematical Exposition} 
+1. Not all formulas are equations. Please use `relation', `definition', `statement', or `theorem'.\\
+\indent Bad: The equation\quad\(a^{p}\equiv a(mod p)\)\\
+\indent Good: the theorem\quad\(a^{p}\equiv a(mod p)
+\) \\ 
+
+\noindent2. Use subscripts if and only if you have to use them: For example, let's $X$$=${\(\{x_1.x_2\dots, x_n\}\)}. If we need to define subsets of $X$, we have to let {\(x_{i_1}, x_{i_2}, \dots, x_{i_n}\)}, which we use double subscript, and it looks terrible. A better way to approach this question is not to define the elements of $X$ unless necessary, or you can just use $x$$_1$ and $x$$_2$ as specified elements of $X$ when you need to use them. (For example, when you prove $X$ is a ring.)\\
+
+\noindent3. Display important formulas on a line by themselves, and label the equations for reference, especially for remote reference. But we'd better avoid remote reference. For example, in our \textit{Probability Theory} book, the authors define the Cumulative Distribution Function in chapter 2, but it appears again in chapter 5. The remote reference like this will disturb the readers. \\
+
+\noindent 4. In a paper, there is no such thing as too many examples. We always like to read papers full of examples, rather than read a dry, abstract, academic paper, especially for beginners like us. Consider a book full of definitions and theorems without any examples; you can learn nothing from the book.\\
+
+\noindent5. Control the use of jokes. No matter whether you are writing books or papers, they are all intended to be timeless, at least still valuable for decades. Imagine now you read jokes from a few decades ago; you can't raise a smile at all. So, reduce the use of jokes because they may be left out. If you really want to add a little humor to your writing, please use jokes that they can understand the jokes only when they see the technical points in your article. For example:\\
+\indent ``\dots $\emptyset$D =$\emptyset$  and N$\emptyset$= N, which we may express by saying that $\emptyset$ is absorbing on the left and neutral on the right, like British toilet paper.''\\
+
+\noindent6. Don't use the same notation for two different things. Conversely, use consistent notation for the same thing when it appears in several places. For example:\\
+\indent Bad: $a_i$, $1\leq i\leq n$\dots$a_k$, $1\leq k\leq n$\\
+There are typographic conventions in indices of subscripts: We often make i vary from 1 to m and j from 1 to n. \\
+
+\noindent7. Display important formulas on a line by themselves. Highlighting significant formulas helps the reader get the necessary information quickly. But many readers will skim over formulas on the first reading of your exposition. So your sentences should flow smoothly when all formulas except the simplest one are replaced by anything else, like ``ABC''.\\
+
+\noindent8. Don't turn your article into a homework paper. The latter only lists a sequence of formulas (you can see this in the exercise later). Try to connect the formulas with your comments (see the answer for the exercise).\\
+
+\noindent9. When you are giving a definition or making comments on some important theorem, try to state things twice in complementary ways. This reinforces the reader's understanding.\\
+
+\noindent10. The text should make sense if we read through it, omitting the titles of subsections.\\
+\indent Bad: \textbf{Riemann Integral.} This technique is the definite integral normally encountered in calculus texts.\\
+\indent Good: \textbf{Riemann Integral.} The Riemann integral is the definite integral normally encountered in calculus texts.\\
+
+\noindent11. Be careful with terms. Be consistent in your use of terms. What's more, you should align on these terms with your co-author. For example, you suppose that A is a singular matrix in your section, but your co-author says A is an invertible matrix. And don't define the terms you never use(at least you won't use them for a long time). As an example, in our ODE textbook, we define an Autonomous System in the first chapter, but really use it in the last part of the book.\\
+
+\section{Quotation}
+\textit{Quotation \dots a writer expresses himself in quoting words that have been used before because they give his meaning better than he can give it himself, or because
+	they are beautiful or witty, or because he expects them to touch a chord of
+	association in his readers, or because he wishes to show that he is learned and
+	well-read. Quotation due to the last motive is invariably ill-advised; the discerning
+	reader detects it and is contemptuous, the undiscerning is perhaps impressed, but
+	even then is at the same time repelled, pretentious quotation being the surest road
+	to tedium.}\\ \rightline{--- Fowler, \textit{Dictionary of Modern English Usage.}}\\ 
+
+
+\noindent Whatever we want to write, we always quote others' articles or formulas. But where can we find materials to cite?\\  
+
+\noindent 1. We seldom have an appropriate quotation in advance, just as Don said ``Serendipity''. So when we are writing, we always take a lot of time finding a quotation. Don recommends dictionaries of quotations, like \textit{Bartlett's Familiar Quotations} and \textit{The Oxford English Dictionary (OED)}\\
+
+\noindent 2. Another way to find a quotation is to utilize computer technology. For example, when you already know the sentence `` To be \dots'' is from \textit{Hamlet}, you can just search for the occurrence of `` To be '' in the text, and you will find the correct line of the sentence.\\
+
+\noindent3. When you are in a desperate case and have no idea how to quote, you can quote yourself, or you can just cite something else that has nothing to do with your theme entirely, only if what you quote makes sense in your article.  \\
+
+\noindent4. Although we just provide methods of finding quotations, the best way to find wonderful quotations is to live a full and varied life, read widely, keep your eyes open, and live long enough. Then you will stumble across great quotations.\\
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% References
-% Include references only if there are citations.
-\ifnum\value{cite}>0
-    \small
-    \bibliography{\bibfile}
-    \bibliographystyle{plain}
-\fi
+\section{The Writing Process}
+\noindent1. Why do you want to write? There are two bad reasons: ``to have a long publication list'' and ``to have a paper published in a specific conference''. These reasons are not hard to understand, as now the criterion still lies in the quantity of papers you publish, rather than the quality of papers. But you can't write high-quality articles with these two reasons. The real good reason is you are expressing something that you are excited about.\\
 
-%% The end
+\noindent2. For nonnative English speakers, there are likely to be questions of words and grammar in writing. So we need some useful reference books. Here are six books recommended by Don:\\
+\textit{The Oxford English Dictionary(OED)} and \textit{The OED Supplement} help you search vocabulary. For \textit{OED}, Don uses the two-volume ``squint print'' edition rather than the 16-volume set. You can go to the library and find them.\\
+\textit{Roget's Thesaurus }helps you find synonyms. When you forget a word but remember its meaning, or you want to avoid repetition, this dictionary is a good choice.\\
+\textit{The American Heritage Dictionary} and \textit{The Longman Dictionary of Contemporary English} help you distinguish minor differences between similar words. For example, you can find the nuances of `mind-bending' versus `mind-blowing' versus `mind-boggling' in them.\\
+\textit{Webster's New World Speller Divider} helps you spell correctly, especially for those who are not proficient at spelling\\
+
+\noindent3. Certainly, you need to draft when you just start writing. Some people compose at a terminal, but I recommend writing by hand first. Because we write more quickly by hand, our thinking won't be interrupted by considering how to write.\\
+
+\noindent4. Revision: All good works need revision. First, when you type your handwritten copy into your computer, you need to edit your drafts. At least you can read it smoothly at normal reading speed. Certainly, you revise your context and get your text \TeX ed. Of course, rewriting does not all occur at any one stage. You still revise your text for even hundreds and thousands of times.\\
+
+\noindent5. Publish: As we need to rewrite several times, how can we judge that we don't need to rewrite it again and publish it? As Leslie says, we should judge our texts by the best things we decided not to publish.\\
+
+\noindent6. Learning: How do we learn to write?\\
+\textit{If you aspire to be a poet, the real work lies beyond the poem itself.}\\
+\rightline{\textit{-- Su Shi}}
+As he says, we need to learn writing beyond the act of writing itself. We should learn to write by reading. More specifically, we should read great literature to learn how to write good mathematical literature. \\
+
+\section{An Exercise on Writing}
+\indent Suppose A is an n by n matrix. A$_{ik}$ denotes the entry in row i, column k of A.\\ 
+For all i and k, A$_{ik}$ is a real number. We say A is a strictly diagonally dominant matrix, if: {\large For all \(1\leq i\leq n\),
+	\[
+	\vert A_{ii}\vert>\sum_{\substack {j=1 \\ j\neq i}}^{n}\vert A_{ij}\vert
+	\].}
+\indent We want to prove that A is a strictly diagonally dominant matrix implies A is an invertible matrix.\\
+The exercise is just to examine your writing, so the following is a mathematically correct proof from my homework; you need to improve the quality of the writing.\\
+\indent {\large Suppose A is a singular matrix.\\
+	\indent\[
+	\exists x\neq 0, Ax=0\\
+	\]\indent
+	\[
+	\max|x_i|=x_k=1\\
+	\]\indent
+	\[
+	\sum_{j=1}^{n}A_{kj}x_j=0\\
+	\]\indent
+	\[
+	A_{kk}=-\sum_{\substack {j=1 \\ j\neq k}}^nA_{kj}x_j\\
+	\]\indent
+	\[
+	\vert A_{kk}\vert=\vert\sum_{\substack {j=1 \\ j\neq k}}^nA_{kj}x_j\vert\leq\sum_{\substack {j=1 \\ j\neq k}}^n|A_{kj}|
+	\\
+	\]\indent but      
+	\[
+	\vert A_{kk}\vert>\sum_{\substack {j=1 \\ j\neq i}}^{n}\vert A_{kj}\vert      
+	\]\quad\quad\quad Contradiction\\
+	\indent The theorem is true.
+}
+
+\section{An Answer}
+Here is one way to complete the exercise in the previous section. Please try to work it out yourself before reading this section.\\ 
+\begin{proof}
+	A is a strictly diagonally dominant matrix. For all \(1\leq i\leq n\)\[
+	\vert A_{ii}\vert>\sum_{\substack {k=1 \\ k\neq i}}^{n}\vert A_{ik}\vert\tag{1}
+	\]\
+	Suppose the desired result is false. So A is a Singular matrix. Then there exists a vector \(x=(x_1, x_2, \dots x_n)\) such that Ax=0. Let $\lVert x \rVert_\infty$ =\(\underset{1\leq j\leq n}\max |x_j|=|x_k|\)=1. Consider the k\(_{th}\) equation of Ax=0:\\
+	\[
+	\sum_{j=1}^{n}A_{ki}x_j=\sum A_{k1}x_1+A_{k2}x_2+A_{k3}x_3···+A_{kn}x_n=0\\
+	\]
+	move all\(A_{kj}x_j\), j$\neq k$ to the right-hand side:
+	\[
+	A_{kk}x_k=-\sum_{\substack {j=1 \\ j\neq k}}^nA_{kj}x_j
+	\]
+	$|x_k|=1$, for all $ j\neq k, |x_j|\leq 1$. Take the absolute value on both sides:
+	\[
+	\vert A_{kk}\vert=\vert\sum_{\substack {j=1 \\ j\neq k}}^nA_{kj}x_j\vert\leq\sum_{\substack {j=1 \\ j\neq k}}^n|A_{kj}|\tag{2}
+	\\
+	\]
+	Therefore, the inequality(2) contradicts formula(1).\\
+	So A is an invertible matrix.
+\end{proof}
 \end{document}
