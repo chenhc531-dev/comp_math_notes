@@ -1,7 +1,5 @@
 name: LaTeX Build with Spell Check
-
 on: [push, pull_request]
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,7 +19,8 @@ jobs:
           
       - name: Check spelling with codespell
         run: |
-          codespell --skip="*.pdf,*.bin,*.pyc,*.png,*.jpg" --ignore-words-list="tex,filename" || true
+          # 移除 || true，让 codespell 在发现错误时失败
+          codespell --skip="*.pdf,*.bin,*.pyc,*.png,*.jpg" --ignore-words-list="tex,filename"
           
       - name: LaTeX specific spell check
         run: |
@@ -33,17 +32,26 @@ jobs:
           tex
           EOF
           
+          # 初始化错误标志
+          has_errors=false
+          
           # 检查所有 .tex 文件
           for file in $(find . -name "*.tex"); do
             echo "Checking $file"
             errors=$(aspell --lang=en --mode=tex --personal=.aspell.en.pws list < "$file")
             if [ -n "$errors" ]; then
-              echo "Spelling errors in $file:"
+              echo "❌ Spelling errors in $file:"
               echo "$errors"
+              has_errors=true
+            else
+              echo "✅ $file: No spelling errors found"
             fi
           done
-  
-  
           
-          
-          
+          # 如果有错误，则失败
+          if [ "$has_errors" = true ]; then
+            echo "Spelling check failed! Please fix the errors above."
+            exit 1
+          else
+            echo "All files passed spelling check!"
+          fi
