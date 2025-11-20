@@ -17,41 +17,84 @@ jobs:
           sudo apt-get install -y aspell aspell-en
           pip install codespell
           
-      - name: Check spelling with codespell
+      - name: Detailed LaTeX spell check with context
         run: |
-          # 移除 || true，让 codespell 在发现错误时失败
-          codespell --skip="*.pdf,*.bin,*.pyc,*.png,*.jpg" --ignore-words-list="tex,filename"
-          
-      - name: LaTeX specific spell check
-        run: |
-          # 创建自定义字典来忽略 LaTeX 命令
           cat > .aspell.en.pws << 'EOF'
           personal_ws-1.1 en 0
           BibTeX
           LaTeX
           tex
+          documentclass
+          usepackage
           EOF
           
-          # 初始化错误标志
-          has_errors=false
+          echo "🔍 Starting detailed spell check..."
+          total_errors=0
           
-          # 检查所有 .tex 文件
           for file in $(find . -name "*.tex"); do
-            echo "Checking $file"
-            errors=$(aspell --lang=en --mode=tex --personal=.aspell.en.pws list < "$file")
-            if [ -n "$errors" ]; then
-              echo "❌ Spelling errors in $file:"
-              echo "$errors"
-              has_errors=true
+            echo ""
+            echo "📄 Checking: $file"
+            echo "========================================"
+            
+            # 创建一个临时文件来存储错误和上下文
+            temp_report=$(mktemp)
+            
+            # 使用aspell检查并获取错误单词及其上下文
+            line_number=0
+            while IFS= read -r line; do
+              line_number=$((line_number + 1))
+              # 检查当前行是否有拼写错误
+              errors=$(echo "$line" | aspell --lang=en --mode=tex --personal=.aspell.en.pws list)
+              
+              if [ -n "$errors" ]; then
+                # 对每个错误单词进行处理
+                for word in $errors; do
+                  # 在行中高亮显示错误单词
+                  highlighted_line=$(echo "$line" | sed "s/\b$word\b/>>>$word<<</g")
+                  echo "Line $line_number: $highlighted_line" >> "$temp_report"
+                  
+                  # 显示错误单词和建议
+                  suggestions=$(echo "$word" | aspell --lang=en --mode=tex --personal=.aspell.en.pws -a | grep "^&" | head -1)
+                  if [ -n "$suggestions" ]; then
+                    echo "     ❌ '$word' - Did you mean: $suggestions" >> "$temp_report"
+                  else
+                    echo "     ❌ '$word' - No suggestions available" >> "$temp_report"
+                  fi
+                  echo "" >> "$temp_report"
+                  
+                  total_errors=$((total_errors + 1))
+                done
+              fi
+            done < "$file"
+            
+            # 显示该文件的错误报告
+            if [ -s "$temp_report" ]; then
+              echo "❌ Errors found in $file:"
+              cat "$temp_report"
+              echo ""
             else
-              echo "✅ $file: No spelling errors found"
+              echo "✅ No spelling errors found in $file"
             fi
+            
+            rm -f "$temp_report"
           done
           
-          # 如果有错误，则失败
-          if [ "$has_errors" = true ]; then
-            echo "Spelling check failed! Please fix the errors above."
+          echo ""
+          echo "📊 SUMMARY"
+          echo "========================================"
+          echo "Total files checked: $(find . -name "*.tex" | wc -l)"
+          echo "Total spelling errors: $total_errors"
+          echo ""
+          
+          if [ $total_errors -gt 0 ]; then
+            echo "❌ SPELL CHECK FAILED"
+            echo "Please fix the spelling errors above before committing."
+            echo ""
+            echo "💡 TIPS:"
+            echo "- Look for words marked with >>> <<<"
+            echo "- Check the suggested corrections"
+            echo "- Add technical terms to .aspell.en.pws if they are correct"
             exit 1
           else
-            echo "All files passed spelling check!"
+            echo "✅ SPELL CHECK PASSED"
           fi
