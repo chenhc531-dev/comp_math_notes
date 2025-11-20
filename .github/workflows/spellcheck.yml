@@ -1,100 +1,34 @@
-name: LaTeX Build with Spell Check
-on: [push, pull_request]
+name: TeXtidote Spell Check
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
 jobs:
-  build:
+  spellcheck:
     runs-on: ubuntu-latest
+    
     steps:
-      - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
       
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-          
-      - name: Install spell check tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y aspell aspell-en
-          pip install codespell
-          
-      - name: Detailed LaTeX spell check with context
-        run: |
-          cat > .aspell.en.pws << 'EOF'
-          personal_ws-1.1 en 0
-          BibTeX
-          LaTeX
-          tex
-          documentclass
-          usepackage
-          EOF
-          
-          echo "🔍 Starting detailed spell check..."
-          total_errors=0
-          
-          for file in $(find . -name "*.tex"); do
-            echo ""
-            echo "📄 Checking: $file"
-            echo "========================================"
-            
-            # 创建一个临时文件来存储错误和上下文
-            temp_report=$(mktemp)
-            
-            # 使用aspell检查并获取错误单词及其上下文
-            line_number=0
-            while IFS= read -r line; do
-              line_number=$((line_number + 1))
-              # 检查当前行是否有拼写错误
-              errors=$(echo "$line" | aspell --lang=en --mode=tex --personal=.aspell.en.pws list)
-              
-              if [ -n "$errors" ]; then
-                # 对每个错误单词进行处理
-                for word in $errors; do
-                  # 在行中高亮显示错误单词
-                  highlighted_line=$(echo "$line" | sed "s/\b$word\b/>>>$word<<</g")
-                  echo "Line $line_number: $highlighted_line" >> "$temp_report"
-                  
-                  # 显示错误单词和建议
-                  suggestions=$(echo "$word" | aspell --lang=en --mode=tex --personal=.aspell.en.pws -a | grep "^&" | head -1)
-                  if [ -n "$suggestions" ]; then
-                    echo "     ❌ '$word' - Did you mean: $suggestions" >> "$temp_report"
-                  else
-                    echo "     ❌ '$word' - No suggestions available" >> "$temp_report"
-                  fi
-                  echo "" >> "$temp_report"
-                  
-                  total_errors=$((total_errors + 1))
-                done
-              fi
-            done < "$file"
-            
-            # 显示该文件的错误报告
-            if [ -s "$temp_report" ]; then
-              echo "❌ Errors found in $file:"
-              cat "$temp_report"
-              echo ""
-            else
-              echo "✅ No spelling errors found in $file"
-            fi
-            
-            rm -f "$temp_report"
-          done
-          
-          echo ""
-          echo "📊 SUMMARY"
-          echo "========================================"
-          echo "Total files checked: $(find . -name "*.tex" | wc -l)"
-          echo "Total spelling errors: $total_errors"
-          echo ""
-          
-          if [ $total_errors -gt 0 ]; then
-            echo "❌ SPELL CHECK FAILED"
-            echo "Please fix the spelling errors above before committing."
-            echo ""
-            echo "💡 TIPS:"
-            echo "- Look for words marked with >>> <<<"
-            echo "- Check the suggested corrections"
-            echo "- Add technical terms to .aspell.en.pws if they are correct"
-            exit 1
-          else
-            echo "✅ SPELL CHECK PASSED"
-          fi
+    - name: Run TeXtidote
+      uses: sylvainhalle/textidote-action@v1
+      with:
+        # 检查所有 .tex 文件
+        files: "**/*.tex"
+        # 检查规则：拼写、语法等
+        check: "en,grammar,maths,consistency"
+        # 输出格式
+        output: "html"
+        # 排除的检查规则（可选）
+        # exclude: "mathspacing,units"
+        
+    - name: Upload TeXtidote report
+      uses: actions/upload-artifact@v4
+      with:
+        name: textidote-report
+        path: textidote-report.html
+        retention-days: 30
