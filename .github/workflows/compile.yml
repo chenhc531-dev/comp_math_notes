@@ -1,74 +1,23 @@
-name: Compile LaTeX Documents
-
-on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+name: Build LaTeX Document
+on: [push]
 
 jobs:
-  build:
+  build_latex:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        
-      - name: Setup LaTeX environment
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            texlive-latex-base \
-            texlive-latex-extra \
-            texlive-fonts-recommended \
-            latexmk \
-            texlive-science \
-            texlive-extra-utils
-          
-      - name: Compile .tex files to build directory
-        run: |
-          # 创建构建目录
-          mkdir -p build
-          
-          # 查找所有 .tex 文件
-          echo "Looking for .tex files..."
-          find . -name "*.tex" -type f | while read texfile; do
-            echo "Found: $texfile"
-          done
-          
-          # 编译所有 .tex 文件到 build 目录
-          for texfile in *.tex; do
-            if [ -f "$texfile" ]; then
-              echo "=== Compiling: $texfile ==="
-              filename=$(basename "$texfile" .tex)
-              
-              # 关键修改：直接编译到 build 目录，不在根目录生成PDF
-              latexmk -pdf -interaction=nonstopmode -outdir=build "$texfile" || echo "Compilation may have issues for $texfile"
-              
-              # 检查是否在build目录中成功生成PDF
-              if [ -f "build/${filename}.pdf" ]; then
-                echo "✓ Successfully compiled: build/${filename}.pdf"
-              else
-                echo "✗ Failed to generate PDF for: $texfile"
-              fi
-            fi
-          done
-          
-      - name: Clean up root directory PDFs
-        run: |
-          # 清理可能意外在根目录生成的PDF文件
-          rm -f *.pdf 2>/dev/null || true
-          echo "Cleaned up any PDFs in root directory"
-          
-      - name: Check build directory contents
-        run: |
-          echo "Contents of build directory:"
-          ls -la build/ || echo "Build directory is empty"
-          echo "Number of PDFs generated: $(find build -name "*.pdf" | wc -l)"
-          
-      - name: Upload PDF artifacts
+      - name: Checkout
+        uses: actions/checkout@v5.0.1
+      
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: |
+           main.tex 
+      
+      - name: Upload PDF as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: compiled-pdfs
-          path: build/*.pdf
-          if-no-files-found: error
-          retention-days: 30
+          name: compiled-pdf
+          path: |
+            *.pdf
+    
