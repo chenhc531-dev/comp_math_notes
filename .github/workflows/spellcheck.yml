@@ -1,59 +1,19 @@
-name: LaTeX Spell Check with HTML Report
+name: Spell Check
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
 
 jobs:
   spellcheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Spell Check
+        uses: crate-ci/typos@v1.20.10
         with:
-          python-version: '3.x'
-          
-      - name: Install tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y aspell aspell-en
-          pip install codespell
-          
-      - name: Run spell check and generate HTML report
-        run: |
-          # 这里运行你的拼写检查并生成 HTML 报告
-          # 假设生成的文件名为 spellcheck_report.html
-          ./your_spellcheck_script --html-report spellcheck_report.html
-          
-      - name: Upload HTML report
-        uses: actions/upload-artifact@v4
-        with:
-          name: spell-check-html-report
-          path: spellcheck_report.html
-          
-      - name: Convert to text and comment on PR
-        if: github.event_name == 'pull_request'
-        run: |
-          # 简单提取错误摘要
-          echo "# Spell Check Summary" > summary.md
-          echo "" >> summary.md
-          echo "## Files with errors:" >> summary.md
-          grep -o 'Checking.*\.tex' spellcheck_report.html | sort -u >> summary.md
-          echo "" >> summary.md
-          echo "## Total errors found:" >> summary.md
-          grep -c "❌" spellcheck_report.html >> summary.md
-          
-      - name: Add summary to PR
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const fs = require('fs');
-            const summary = fs.readFileSync('summary.md', 'utf8');
-            
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: summary
-            })
+          files: .
