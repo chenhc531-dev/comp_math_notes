@@ -5,19 +5,10 @@ matrix:
   dictionary:
     wordlists:
     - .wordlist.txt
-    output: build/dictionary.txt
   pipeline:
-  - pyspelling.filters.context:
-      context_visible: false
-      delimiters:
-      - open: '(?s)\\\\[a-zA-Z]+\{'
-        close: '\}'
-      - open: '\\\\[a-zA-Z]+'
-        close: ''
-      - open: '%'
-        close: '\n'
-      - open: '\$'
-        close: '\$'
+  - pyspelling.filters.pattern:
+      pattern: '(?P<text>.*?)(\\[a-zA-Z]+|\$|%)'
+      group: text
   sources:
   - '**/*.tex'
   default_encoding: utf-8
