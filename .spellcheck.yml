@@ -6,9 +6,7 @@ matrix:
     wordlists:
     - .wordlist.txt
   pipeline:
-  - pyspelling.filters.pattern:
-      pattern: '(?P<text>.*?)(\\[a-zA-Z]+|\$|%)'
-      group: text
+  - pyspelling.filters.text:
   sources:
   - '**/*.tex'
   default_encoding: utf-8
