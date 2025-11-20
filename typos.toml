@@ -1,0 +1,22 @@
+[files]
+extend-exclude = ["*.pdf", "*.aux", "*.log"]  # 排除编译生成的文件
+
+[default]
+# 忽略 LaTeX 特定的命令和编码
+ignore-regex = ['\\w+\\d+']  # 忽略类似 OT1 的字母数字组合
+
+[default.ignore-words]
+# 明确忽略这些技术术语
+"OT1" = "OT1"
+"pzc" = "pzc"
+"mathpzc" = "mathpzc"
+
+[default.extend-words]
+# 添加计算数学常用术语
+"eigenvalue" = "eigenvalue"
+"eigenvector" = "eigenvector"
+"numerical" = "numerical"
+"computational" = "computational"
+"algorithm" = "algorithm"
+"LaTeX" = "LaTeX"
+"BibTeX" = "BibTeX"
