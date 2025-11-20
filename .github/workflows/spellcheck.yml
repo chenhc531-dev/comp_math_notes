@@ -10,10 +10,9 @@ jobs:
               uses: ChiefGokhlayeh/textidote-action@v5
               id: lint
               with:
-                  root_file:| 
-                   main.tex
-                   Chen_Huicong-Mathematical_Writing.tex
-                  
+                  root_file:|
+                  main.tex
+                  Chen_Huicong-Mathematical_Writing.tex
 
                   ## Implied defaults:
                   # working_directory:
@@ -30,4 +29,4 @@ jobs:
                   path: report.html
             - name: Throw error if linter warnings exist
               if: ${{ steps.lint.outputs.num_warnings != 0 }}
-              run: 'echo "::error file=main.tex::num_warnings: ${{ steps.lint.outputs.num_warnings }}"; exit 1;'
+              run: 'echo "::error file=main.tex::num_warnings: ${{ steps.lint.outputs.num_warnings }}"; exit 1;''
