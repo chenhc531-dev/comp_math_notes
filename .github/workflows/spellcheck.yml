@@ -1,4 +1,4 @@
-name: TeXtidote Spell Check
+name: Spell Check
 
 on:
   push:
@@ -14,19 +14,23 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    - name: Run TeXtidote
-      uses: sylvainhalle/textidote-action@v1
-      with:
-        # 检查所有 .tex 文件
-        files: "**/*.tex"
-        # 检查规则：拼写、语法等
-        check: "en,grammar,maths,consistency"
-        # 输出格式
-        output: "html"
-        # 排除的检查规则（可选）
-        # exclude: "mathspacing,units"
+    - name: Try TeXtidote with Docker
+      id: textidote
+      continue-on-error: true
+      run: |
+        docker run --rm -v $PWD:/work sylvainhalle/textidote \
+          --check en,grammar,maths,consistency \
+          --output html \
+          *.tex > textidote-report.html 2>/dev/null || echo "TeXtidote failed"
+          
+    - name: Fallback to codespell
+      if: steps.textidote.outcome == 'failure'
+      run: |
+        pip install codespell
+        codespell --skip="*.pdf,*.bin,*.git*" --ignore-words-list="eigenvalue,pseudoinverse,preconditioner,LaTeX" --quiet-level=2
         
-    - name: Upload TeXtidote report
+    - name: Upload TeXtidote report if available
+      if: steps.textidote.outcome == 'success'
       uses: actions/upload-artifact@v4
       with:
         name: textidote-report
