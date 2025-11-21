@@ -1,0 +1,22 @@
+# Mathematical terms
+lemma
+corollary
+theorem
+proof
+definition
+proposition
+equation
+matrix
+eigenvalue
+eigenvector
+determinant
+derivative
+integral
+manifold
+homeomorphism
+isomorphism
+homomorphism
+automorphism
+bijection
+injection
+surjection
