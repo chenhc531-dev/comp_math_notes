@@ -324,3 +324,21 @@ TSWLatexianTemp*
 # option is specified. Footnotes are the stored in a file with suffix Notes.bib.
 # Uncomment the next line to have this generated file ignored.
 #*Notes.bib
+*~
+*.backup
+*.toc
+*.aux
+*.log
+*.out
+*.bbl
+*.blg
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+
+# PDF 文件（如果源代码是 TeX，通常不跟踪生成的 PDF）
+*.pdf
+
+# 特定编辑器的临时文件
+*~txs*
+EOF
