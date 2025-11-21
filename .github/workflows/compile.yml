@@ -12,7 +12,6 @@ jobs:
         uses: xu-cheng/latex-action@v2
         with:
           root_file: |
-           main.tex
            Chen_Huicong-Mathematical_Writing.tex
       
       - name: Upload PDF as artifact
