@@ -1,8 +1,0 @@
-LaTeX
-GitHub
-README
-pyspelling
-Aspell
-Hunspell
-markdown
-configuration
