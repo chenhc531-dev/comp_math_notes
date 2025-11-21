@@ -1,1 +1,11 @@
-.github/actions/spelling/excludes.txt
+# 忽略所有拼写检查配置文件，避免自引用问题
+^\.github/actions/spelling/patterns\.txt$
+^\.github/actions/spelling/allow\.txt$
+^\.github/actions/spelling/reject\.txt$
+^\.github/actions/spelling/excludes\.txt$
+^\.github/actions/spelling/expect\.txt$
+^\.github/actions/spelling/dictionary\.txt$
+^\.github/actions/spelling/candidate\.patterns$
+^\.github/actions/spelling/line_forbidden\.patterns$
+^\.github/actions/spelling/advice\.md$
+^\.github/actions/spelling/only\.txt$
