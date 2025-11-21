@@ -108,8 +108,14 @@ jobs:
         extra_dictionaries: |
           cspell:software-terms/dict/softwareTerms.txt
           cspell:latex/dict/latex.txt
+          cspell:html/dict/html.txt
+          cspell:python/src/python/python-lib.txt
+          cspell:php/dict/php.txt
+          cspell:filetypes/filetypes.txt
           cspell:latex/samples/sample-words.txt
-         
+          cspell:aws/aws.txt
+          cspell:python/src/python/python.txt
+          cspell:django/dict/django.txt
 
   comment-push:
     name: Report (Push)
