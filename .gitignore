@@ -342,3 +342,5 @@ TSWLatexianTemp*
 # 特定编辑器的临时文件
 *~txs*
 EOF
+#本地编辑
+.obsidian
