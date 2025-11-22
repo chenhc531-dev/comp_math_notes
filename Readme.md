@@ -1,9 +1,28 @@
-# Computational Mathematics Notes
+# Compile math note 
+This repository hosts my LaTeX notes. 
+## Features
+On every push, it automatically:
+- Compiles the .tex files into PDFs
+- Saves the generated PDFs as artifacts  
+- Performs spell checking 
+## LaTeX Compilation 
 
-This repository contains LaTeX notes for computational mathematics.
+This repository uses [xu-cheng/latex-action](https://github.com/xu-cheng/latex-action) to automatically compile LaTeX documents on every push.
 
-## Contents
+### Usage
+- Push your LaTeX source files to the repository
+- The workflow will automatically compile your documents
+- Download the generated PDFs on the Actions page
 
-- Mathematical proofs
-- Algorithms
-- Theorems and lemmas
+### Local Development
+```bash
+# Install latexmk (usually included with LaTeX distributions)
+latexmk -pdf main.tex
+```
+
+## Spell-Checking
+This repository uses [check-spelling/check-spelling](https://github.com/marketplace/actions/check-spelling) to automatically perform spell checking every time you push.
+
+## Usage
+- See @check-spelling-bot's report on the Actions page
+- Add expect words in `expect.txt`
