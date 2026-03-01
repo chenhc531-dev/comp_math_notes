@@ -9,3 +9,4 @@
 ^\.github/actions/spelling/line_forbidden\.patterns$
 ^\.github/actions/spelling/advice\.md$
 ^\.github/actions/spelling/only\.txt$
+^\ref.bib
