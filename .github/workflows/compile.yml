@@ -12,7 +12,7 @@ jobs:
         uses: xu-cheng/latex-action@v2
         with:
           root_file: |
-           Chen_Huicong-Mathematical_Writing.tex
+           Origin_Dilemma_and_Development_of_the_DFP_Algorithm.tex
       
       - name: Upload PDF as artifact
         uses: actions/upload-artifact@v4
