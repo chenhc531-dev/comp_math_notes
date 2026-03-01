@@ -273,3 +273,4 @@ xpatch
 xpatchcmd
 xspace
 xspaceaddexceptions
+PDFs
